@@ -68,8 +68,8 @@ EndFunction
 ; Go through every registered menu and:
 ; if the plugin is installed, install the menus
 ; if it isn't then try to clean up the menu formlists.
-; there is some performance left on the table here. for more speed use \
-; GetChunk directly instead of GetMenuStruct. that will get rid of the \
+; there is some performance left on the table here. for more speed use
+; GetChunk directly instead of GetMenuStruct. that will get rid of the
 ; overhead of a few function calls.
 Function ProcessMenus()
 	int i = 0
@@ -89,7 +89,7 @@ Function ProcessMenus()
 			Else
 				Debug.Trace("uninstalled menu: " + CurrentMenu.ModName)
 				PrintFormlist(CurrentMenu.TargetMenu)
-				ActuallyRemoveNoneValues(CurrentMenu.TargetMenu)
+				CleanFormList(CurrentMenu.TargetMenu)
 				CurrentMenu.PluginName = ""
 				MenuCount -= 1
 			EndIf
@@ -202,7 +202,7 @@ String Function MenuToString(FormList Root, String Prefix = "")
 EndFunction
 
 ; Naive. Didn't work, but was worth a shot.
-; Function ActuallyRemoveNoneValues(FormList f)
+; Function CleanFormList(FormList f)
 ; 	int i = f.GetSize()
 ; 	While (i >= 0)
 ; 		Form element = f.GetAt(i)
@@ -213,11 +213,11 @@ EndFunction
 ; 	EndWhile
 ; EndFunction
 
-; Note that the recursion here will break if there are cycles in the \
-; settlement menu. I can't think of a situation where there would be, but if \
-; it happens this code will break. The game itself might actually break under \
+; Note that the recursion here will break if there are cycles in the
+; settlement menu. I can't think of a situation where there would be, but if
+; it happens this code will break. The game itself might actually break under
 ; those conditions as well.
-Function ActuallyRemoveNoneValues(FormList f, bool Recurse = False)
+Function CleanFormList(FormList f, bool Recurse = False)
 	Form[] tmp = New Form[0]
 
 	int l = f.GetSize()
@@ -236,7 +236,7 @@ Function ActuallyRemoveNoneValues(FormList f, bool Recurse = False)
 	While (i < l)
 		If (tmp[i])
 			If (Recurse && tmp[i] is FormList)
-				ActuallyRemoveNoneValues(tmp[i] as FormList, True)
+				CleanFormList(tmp[i] as FormList, True)
 			EndIf
 			f.AddForm(tmp[i])
 		EndIf
