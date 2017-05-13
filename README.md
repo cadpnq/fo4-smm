@@ -27,6 +27,18 @@ order.
 TBD. This mod is still under construction. For now you can take a look at the
 example plugin to see how things work.
 
+Once you have done that you will want to add the following (or something like
+it) to your mod description:
+
+> This mod uses Settlement Menu Manager to add custom settlement menu
+> categories. This means that you don't need to worry about running a special
+> holotape/chem before you uninstall it: just remove it from your load order
+> and you're done. This obviously also means that you will need to install SMM
+> for this mod to work properly.
+
+In addition to a notice, it would probably be a good idea for you to add SMM as
+a requirement on your mod page.
+
 ## FAQ:
 
 ### User
@@ -44,13 +56,24 @@ using SMM.
 
 ___
 
+**Q:** If I want to stop using SMM can I just disable it? (Can SMM uninstall
+itself automatically?)
+
+**A:** No, it isn't actually possible for a mod to automatically clean up after
+itself once it has been uninstalled. In order to properly uninstall SMM you will
+have to activate the "Safe Mode" feature SMM has, save, close your game, and
+then remove it from your load order. Obviously, uninstalling SMM will break any
+mod that relies on SMM.
+
+___
+
 **Q:** I get a warning that says menu categories are limited to having 128
 subcategories. What do I do?
 
 **A1:** If you see the message when you uninstall a mod you should re-enable
-whatever mod you uninstalled, run the "uninstall saver" (which, as of this
-moment has not yet been written), close your game, uninstall the mod again, and
-restart your game. This actually happening is rather unlikely.
+whatever mod you uninstalled, start your game, activate "Safe Mode", save,
+close your game, uninstall the mod again, and restart your game. This actually
+happening is rather unlikely.
 
 **A2:** If you see the message after you install a new mod it means that your
 mods have tried to add more than 128 elements to some menu. You'll have to pick
@@ -59,12 +82,26 @@ happen.
 
 ___
 
+**Q:** What is "Safe Mode" and how do I enable it?
+
+**A:** Safe Mode temporarily removes everything that SMM has added to the build
+menu. The next time you load your game or open and close the build menu
+everything will be re-added. To activate Safe Mode you have two options:
+* Run the Settlement Menu Manager Holotape that was added to your inventory
+when you installed SMM and select "Enter Safe Mode".
+* Open your settlement build menu, navigate to the SMM category, and build the
+Safe Mode Cube. Once built the cube will exit the build menu, enable Safe Mode,
+and then delete itself.
+
+___
+
 **Q:** A non-SMM enabled mod broke my build menu. Can I use SMM to fix it?
 
-**A:** Yes, either run the menu repair holotape or build the menu repair cube
-located in the SMM menu. It will scan through the build menu and remove every
-invalid category/menu (without clobbering the valid ones). (note: I have all
-the code for this, but I haven't plugged it together yet.)
+**A:** Yes, either select the "Settlement Menu Rescue" option in the SMM
+holotape or build the menu repair cube located in the SMM menu. It will scan
+through the build menu and remove every invalid category/menu (without
+clobbering the valid ones). (note: I have all the code for this, but I haven't
+plugged it together yet.)
 
 ___
 

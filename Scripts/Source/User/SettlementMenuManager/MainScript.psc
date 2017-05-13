@@ -10,6 +10,7 @@ EndStruct
 
 FormList Property WorkshopMainMenu Auto Const
 FormList Property SMMMainMenu Auto Const
+Holotape Property SMM_Holotape Auto Const
 Bool Property Ready = False Auto
 
 ; is 1024 slots overkill? probably, but then again so was 640k
@@ -71,7 +72,7 @@ EndFunction
 ; there is some performance left on the table here. for more speed use
 ; GetChunk directly instead of GetMenuStruct. that will get rid of the
 ; overhead of a few function calls.
-Function ProcessMenus()
+Function ProcessMenus(bool SafeMode = False)
 	int i = 0
 	int ProcessedMenus = 0
 	CustomMenu CurrentMenu
@@ -85,7 +86,11 @@ Function ProcessMenus()
 			If (Game.IsPluginInstalled(CurrentMenu.PluginName))
 				Debug.Trace("installed menu: " + CurrentMenu.ModName)
 				ProcessedMenus += 1
-				CurrentMenu.TargetMenu.AddForm(CurrentMenu.ModMenu)
+				If (SafeMode)
+					CurrentMenu.TargetMenu.RemoveAddedForm(CurrentMenu.ModMenu)
+				Else
+					CurrentMenu.TargetMenu.AddForm(CurrentMenu.ModMenu)
+				EndIf
 			Else
 				Debug.Trace("uninstalled menu: " + CurrentMenu.ModName)
 				PrintFormlist(CurrentMenu.TargetMenu)
@@ -132,6 +137,8 @@ Event OnQuestInit()
 	RegisterForRemoteEvent(Game.GetPlayer(), "OnPlayerLoadGame")
 	RegisterForMenuOpenCloseEvent("WorkshopMenu")
 
+	Game.GetPlayer().AddItem(SMM_Holotape as Form, 1, False)
+
 	Chunk0 = new CustomMenu[128]
 	Chunk1 = new CustomMenu[128]
 	Chunk2 = new CustomMenu[128]
@@ -155,7 +162,6 @@ Event OnQuestInit()
 	EndWhile
 
 	Ready = True
-
 	RegisterMenu("SettlementMenuManager.esp", WorkshopMainMenu, SMMMainMenu, \
 		"Settlement Menu Manager", "cadpnq")
 EndEvent
