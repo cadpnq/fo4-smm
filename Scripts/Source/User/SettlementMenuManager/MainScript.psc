@@ -89,11 +89,10 @@ Function ProcessMenus(bool SafeMode = False)
 				If (SafeMode)
 					CurrentMenu.TargetMenu.RemoveAddedForm(CurrentMenu.ModMenu)
 				Else
-					CurrentMenu.TargetMenu.AddForm(CurrentMenu.ModMenu)
+					TryToInstallMenu(CurrentMenu)
 				EndIf
 			Else
 				Debug.Trace("uninstalled menu: " + CurrentMenu.ModName)
-				PrintFormlist(CurrentMenu.TargetMenu)
 				CleanFormList(CurrentMenu.TargetMenu)
 				CurrentMenu.PluginName = ""
 				MenuCount -= 1
@@ -116,6 +115,30 @@ Function RegisterMenu(String PluginName, FormList TargetMenu, \
 	Menu.ModName = ModName
 	Menu.Author = Author
 	MenuCount += 1
+
+	TryToInstallMenu(Menu)
+EndFunction
+
+Function TryToInstallMenu(CustomMenu Menu)
+	If (!Menu.TargetMenu || !Menu.ModMenu)
+		Return
+	ElseIf (Menu.TargetMenu.HasForm(Menu.ModMenu))
+		; already installed
+		Return
+	ElseIf (Menu.TargetMenu.GetSize() == 128)
+		; menu already full, can't install
+		Return
+	Else
+		Menu.TargetMenu.AddForm(Menu.ModMenu)
+	EndIf
+EndFunction
+
+Function TryToUninstallMenu(CustomMenu Menu)
+	If (!Menu.TargetMenu || !Menu.ModMenu)
+		Return
+	ElseIf (!Menu.TargetMenu.HasForm(Menu.ModMenu))
+		Return
+	EndIf
 EndFunction
 
 ; unregister/uninstall the menus for a plugin
