@@ -86,22 +86,17 @@ ___
 
 **A:** Safe Mode temporarily removes everything that SMM has added to the build
 menu. The next time you load your game or open and close the build menu
-everything will be re-added. To activate Safe Mode you have two options:
-* Run the Settlement Menu Manager Holotape that was added to your inventory
-when you installed SMM and select "Enter Safe Mode".
-* Open your settlement build menu, navigate to the SMM category, and build the
-Safe Mode Cube. Once built the cube will exit the build menu, enable Safe Mode,
-and then delete itself.
+everything will be re-added. To activate Safe Mode run the Settlement Menu
+Manager Holotape that was added to your inventory when you installed SMM and
+select "Enter Safe Mode".
 
 ___
 
 **Q:** A non-SMM enabled mod broke my build menu. Can I use SMM to fix it?
 
-**A:** Yes, either select the "Settlement Menu Rescue" option in the SMM
-holotape or build the menu repair cube located in the SMM menu. It will scan
-through the build menu and remove every invalid category/menu (without
-clobbering the valid ones). (note: I have all the code for this, but I haven't
-plugged it together yet.)
+**A:** Yes, select the "Settlement Menu Rescue" option in the SMM
+holotape. It will scan through the build menu and remove every invalid
+category/menu (without clobbering the valid ones).
 
 ___
 

@@ -9,7 +9,6 @@ Struct CustomMenu
 EndStruct
 
 FormList Property WorkshopMainMenu Auto Const
-FormList Property SMMMainMenu Auto Const
 Holotape Property SMM_Holotape Auto Const
 Bool Property Ready = False Auto
 
@@ -185,8 +184,6 @@ Event OnQuestInit()
 	EndWhile
 
 	Ready = True
-	RegisterMenu("SettlementMenuManager.esp", WorkshopMainMenu, SMMMainMenu, \
-		"Settlement Menu Manager", "cadpnq")
 EndEvent
 
 Event OnMenuOpenCloseEvent(string asMenuName, bool abOpening)
