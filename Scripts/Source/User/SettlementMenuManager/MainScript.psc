@@ -197,15 +197,6 @@ Event Actor.OnPlayerLoadGame(Actor ActorRef)
 	Debug.Trace(MenuToString(WorkshopMainMenu))
 EndEvent
 
-Function PrintFormlist(FormList f)
-	int i = 0
-	Debug.Trace("+++++++++++++++++++++++++++")
-	While (i < f.GetSize())
-			Debug.Trace(f.GetAt(i))
-		i += 1
-	EndWhile
-EndFunction
-
 String Function MenuToString(FormList Root, String Prefix = "")
 	String ret = ""
 
@@ -245,13 +236,27 @@ EndFunction
 ; those conditions as well.
 Function CleanFormList(FormList f, bool Recurse = False)
 	Form[] tmp = New Form[0]
+	Form element
+	bool dirty = False
 
 	int l = f.GetSize()
 	int i = 0
 	While (i < l)
-		tmp.Add(f.GetAt(i))
+		element = f.GetAt(i)
+		If (element)
+			tmp.Add(element)
+			If (Recurse && element is FormList)
+				CleanFormList(element as FormList, Recurse)
+			EndIf
+		Else
+			dirty = True
+		EndIf
 		i += 1
 	EndWhile
+
+	If (!dirty)
+		Return
+	EndIf
 
 	; out with the old
 	f.Revert()
@@ -260,12 +265,7 @@ Function CleanFormList(FormList f, bool Recurse = False)
 	l = tmp.Length
 	i = 0
 	While (i < l)
-		If (tmp[i])
-			If (Recurse && tmp[i] is FormList)
-				CleanFormList(tmp[i] as FormList, True)
-			EndIf
-			f.AddForm(tmp[i])
-		EndIf
+		f.AddForm(tmp[i])
 		i += 1
 	EndWhile
 EndFunction

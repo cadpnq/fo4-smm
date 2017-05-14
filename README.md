@@ -33,8 +33,7 @@ it) to your mod description:
 > This mod uses Settlement Menu Manager to add custom settlement menu
 > categories. This means that you don't need to worry about running a special
 > holotape/chem before you uninstall it: just remove it from your load order
-> and you're done. This obviously also means that you will need to install SMM
-> for this mod to work properly.
+> and you're done.
 
 In addition to a notice, it would probably be a good idea for you to add SMM as
 a requirement on your mod page.
@@ -104,7 +103,7 @@ ___
 **Q:** Can't I just include your code in my mod and not depend on my users
 installing SMM?
 
-**A:** No! The whole point is having a seperate, always installed bit of code
+**A:** No! The whole point is having a separate, always installed bit of code
 that does everything. If each mod tried to do that they'd end up stomping all
 over one another.
 
