@@ -1,7 +1,5 @@
 ScriptName SettlementMenuManager:MenuInstaller Extends Quest
 
-SettlementMenuManager:MainScript Property smm_MenuInstaller Auto
-
 String Property PluginName Auto
 String Property ModName Auto
 String Property Author Auto
