@@ -1,6 +1,5 @@
 ;BEGIN FRAGMENT CODE - Do not edit anything between this and the end comment
-Scriptname SettlementMenuManager:TERM_SMM_Terminal_02002664 Extends Terminal \
-  Hidden Const
+Scriptname SettlementMenuManager:TERM_SMM_Terminal_02002664 Extends Terminal Hidden Const
 
 ;BEGIN FRAGMENT Fragment_Terminal_01
 Function Fragment_Terminal_01(ObjectReference akTerminalRef)
@@ -9,6 +8,7 @@ Function Fragment_Terminal_01(ObjectReference akTerminalRef)
   SettlementMenuManager:MainScript SMM = smm_MenuInstaller as \
     SettlementMenuManager:MainScript
   SMM.CleanFormList(SMM.WorkshopMainMenu, True)
+  SMM_RepairComplete.Show()
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -35,3 +35,5 @@ EndFunction
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 
 Quest Property smm_MenuInstaller Auto Const
+
+Message Property SMM_RepairComplete Auto Const
