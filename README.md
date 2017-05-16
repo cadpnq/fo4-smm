@@ -24,8 +24,16 @@ order.
 
 ## How to add SMM support to your mod:
 
-TBD. This mod is still under construction. For now you can take a look at the
-example plugin to see how things work.
+1. Create a quest and check "Start Game Enabled"
+2. Attach SettlementMenuManager:MenuInstaller.psc to it.
+3. Set the PluginName, ModName, and Author properties on the script.
+4. Add a struct for each menu you want SMM to add to the game. The ModMenu value
+ in each struct needs to be either a keyword or a formlist. TargetMenu is where
+ SMM will put your menu.
+
+
+ Alternatively you can simply copy the quest from SMM_Example_Plugin.esp and
+ change properties as in steps 3 and 4 above.
 
 Once you have done that you will want to add the following (or something like
 it) to your mod description:
