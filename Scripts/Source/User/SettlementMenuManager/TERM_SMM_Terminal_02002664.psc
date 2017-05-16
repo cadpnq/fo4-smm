@@ -28,6 +28,9 @@ EndFunction
 Function Fragment_Terminal_03(ObjectReference akTerminalRef)
 ;BEGIN CODE
 ; debug log
+  SettlementMenuManager:MainScript SMM = smm_MenuInstaller as \
+    SettlementMenuManager:MainScript
+  SMM.DumpMenu()
 ;END CODE
 EndFunction
 ;END FRAGMENT
