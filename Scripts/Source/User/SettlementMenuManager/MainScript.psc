@@ -86,13 +86,13 @@ Function ProcessMenus(bool SafeMode = False)
         Debug.Trace("installed menu: " + CurrentMenu.ModName)
         ProcessedMenus += 1
         If (SafeMode)
-          CurrentMenu.TargetMenu.RemoveAddedForm(CurrentMenu.ModMenu)
+          TryToUninstallMenu(CurrentMenu)
         Else
           TryToInstallMenu(CurrentMenu)
         EndIf
       Else
         Debug.Trace("uninstalled menu: " + CurrentMenu.ModName)
-        CleanFormList(CurrentMenu.TargetMenu)
+        TryToUninstallMenu(CurrentMenu)
         CurrentMenu.PluginName = ""
         MenuCount -= 1
       EndIf
@@ -121,22 +121,18 @@ EndFunction
 Function TryToInstallMenu(CustomMenu Menu)
   If (!Menu.TargetMenu || !Menu.ModMenu)
     Return
-  ElseIf (Menu.TargetMenu.HasForm(Menu.ModMenu))
-    ; already installed
-    Return
-  ElseIf (Menu.TargetMenu.GetSize() == 128)
-    ; menu already full, can't install
-    Return
   Else
     Menu.TargetMenu.AddForm(Menu.ModMenu)
   EndIf
 EndFunction
 
 Function TryToUninstallMenu(CustomMenu Menu)
-  If (!Menu.TargetMenu || !Menu.ModMenu)
+  If (!Menu.TargetMenu)
     Return
-  ElseIf (!Menu.TargetMenu.HasForm(Menu.ModMenu))
-    Return
+  ElseIf (!Menu.ModMenu)
+    CleanFormList(Menu.TargetMenu)
+  Else
+    Menu.TargetMenu.RemoveAddedForm(Menu.ModMenu)
   EndIf
 EndFunction
 
@@ -194,7 +190,6 @@ EndEvent
 
 Event Actor.OnPlayerLoadGame(Actor ActorRef)
   ProcessMenus()
-  Debug.Trace(MenuToString(WorkshopMainMenu))
 EndEvent
 
 String Function MenuToString(FormList Root, String Prefix = "")
@@ -218,60 +213,99 @@ String Function MenuToString(FormList Root, String Prefix = "")
   Return ret
 EndFunction
 
+; TODO: dump the information of each registered menu
 Function DumpMenu()
   Debug.OpenUserLog("SettlementMenuDump")
   Debug.TraceUser("SettlementMenuDump", MenuToString(WorkshopMainMenu))
   Debug.CloseUserLog("SettlementMenuDump")
 EndFunction
 
-; Naive. Didn't work, but was worth a shot.
-; Function CleanFormList(FormList f)
-;   int i = f.GetSize()
-;   While (i >= 0)
-;     Form element = f.GetAt(i)
-;     If (element == None)
-;       f.RemoveAddedForm(element)
-;     EndIf
-;     i -= 1
-;   EndWhile
-; EndFunction
-
 ; Note that the recursion here will break if there are cycles in the
 ; settlement menu. I can't think of a situation where there would be, but if
 ; it happens this code will break. The game itself might actually break under
 ; those conditions as well.
-Function CleanFormList(FormList f, bool Recurse = False)
-  Form[] tmp = New Form[0]
-  Form element
-  bool dirty = False
 
-  int l = f.GetSize()
+; The process of removing the nones from a formlist is split into four parts:
+;  1. Determine if the formlist needs cleaned (has none in it)
+;  2. Gather all of the non-none values into array(s)
+;  3. Revert the formlist
+;  4. Add the values back from the array(s)
+Function CleanFormList(FormList f, bool Recurse = False, \
+    int index = -1)
   int i = 0
-  While (i < l)
-    element = f.GetAt(i)
-    If (element)
-      tmp.Add(element)
-      If (Recurse && element is FormList)
+  Form element
+
+  If (index == -1)
+    bool dirty = False
+    index = f.GetSize() - 1
+
+    i = index
+    While (i >= 0)
+      element = f.GetAt(i)
+      If (element == None)
+        dirty = True
+      EndIf
+
+      If (element is FormList && Recurse)
         CleanFormList(element as FormList, Recurse)
       EndIf
-    Else
-      dirty = True
+      i -= 1
+    EndWhile
+
+    If (dirty)
+      CleanFormList(f, Recurse, index)
     EndIf
-    i += 1
-  EndWhile
+  Else
+    Form[] tmp = New Form[0]
 
-  If (!dirty)
-    Return
+    While ((i < 128) && (index >= 0))
+      element = f.GetAt(index)
+      If (element != None)
+        tmp.Add(element)
+        i += 1
+      EndIf
+      index -= 1
+    EndWhile
+
+    If (index == -1)
+      f.Revert()
+    Else
+      CleanFormList(f, Recurse, index)
+    EndIf
+
+    i = tmp.Length - 1
+    While (i > -1)
+      f.AddForm(tmp[i])
+      i -= 1
+    EndWhile
   EndIf
-
-  ; out with the old
-  f.Revert()
-
-  ; ...and back in with (some of) the old!
-  l = tmp.Length
-  i = 0
-  While (i < l)
-    f.AddForm(tmp[i])
-    i += 1
-  EndWhile
 EndFunction
+
+; This was for testing CleanFormList on large FormLists
+; Function Flatten(FormList FL, FormList Head = None) global
+;   If (Head == None)
+;     Flatten(FL, FL)
+;     Return
+;   EndIf
+;
+;   Form element
+;   int i = 0
+;   While (i < FL.GetSize())
+;     element = FL.GetAt(i)
+;     If (element is FormList)
+;       Flatten(element as FormList, Head)
+;     Else
+;       Head.AddForm(element)
+;     EndIf
+;
+;     i += 1
+;   EndWhile
+; EndFunction
+;
+; Function BreakMenu() global
+;   SettlementMenuManager:MainScript MainScript = \
+;     Game.GetFormFromFile(0x0000633A, "SettlementMenuManager.esp") as \
+;     SettlementMenuManager:MainScript
+;   Flatten(MainScript.WorkshopMainMenu)
+;   Debug.Messagebox("the menu is ready to be broken")
+; EndFunction

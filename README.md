@@ -74,21 +74,6 @@ mod that relies on SMM.
 
 ___
 
-**Q:** I get a warning that says menu categories are limited to having 128
-subcategories. What do I do?
-
-**A1:** If you see the message when you uninstall a mod you should re-enable
-whatever mod you uninstalled, start your game, activate "Safe Mode", save,
-close your game, uninstall the mod again, and restart your game. This actually
-happening is rather unlikely.
-
-**A2:** If you see the message after you install a new mod it means that your
-mods have tried to add more than 128 elements to some menu. You'll have to pick
-which mods you actually want a only install them. This is also unlikely to
-happen.
-
-___
-
 **Q:** What is "Safe Mode" and how do I enable it?
 
 **A:** Safe Mode temporarily removes everything that SMM has added to the build
