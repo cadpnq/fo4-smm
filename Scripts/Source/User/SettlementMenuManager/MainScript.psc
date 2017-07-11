@@ -83,7 +83,7 @@ Function ProcessMenus(bool SafeMode = False)
     CurrentMenu = GetMenuStruct(i)
     If (CurrentMenu.PluginName != "")
       If (Game.IsPluginInstalled(CurrentMenu.PluginName))
-        Debug.Trace("installed menu: " + CurrentMenu.ModName)
+        Debug.Trace("installed menu for: " + CurrentMenu.ModName)
         ProcessedMenus += 1
         If (SafeMode)
           TryToUninstallMenu(CurrentMenu)
@@ -91,7 +91,7 @@ Function ProcessMenus(bool SafeMode = False)
           TryToInstallMenu(CurrentMenu)
         EndIf
       Else
-        Debug.Trace("uninstalled menu: " + CurrentMenu.ModName)
+        Debug.Trace("uninstalled/unregistered menu for: " + CurrentMenu.ModName)
         TryToUninstallMenu(CurrentMenu)
         CurrentMenu.PluginName = ""
         MenuCount -= 1
@@ -139,13 +139,16 @@ EndFunction
 ; unregister/uninstall the menus for a plugin
 Function UnregisterMenus(String PluginName)
   int i = 0
+  int CheckedMenus = 0
   CustomMenu CurrentMenu
-  While (i < ChunkCount * 128)
+  While ((i < ChunkCount * 128) && (CheckedMenus < MenuCount))
     CurrentMenu = GetMenuStruct(i)
     If (CurrentMenu.PluginName == PluginName)
       CurrentMenu.PluginName = ""
       CurrentMenu.TargetMenu.RemoveAddedForm(CurrentMenu.ModMenu)
       MenuCount -= 1
+    ElseIf (CurrentMenu.PluginName != "")
+      CheckedMenus += 1
     EndIf
     i += 1
   EndWhile
@@ -213,11 +216,31 @@ String Function MenuToString(FormList Root, String Prefix = "")
   Return ret
 EndFunction
 
-; TODO: dump the information of each registered menu
 Function DumpMenu()
   Debug.OpenUserLog("SettlementMenuDump")
   Debug.TraceUser("SettlementMenuDump", MenuToString(WorkshopMainMenu))
   Debug.CloseUserLog("SettlementMenuDump")
+EndFunction
+
+Function DumpRegisteredMenus()
+  Debug.OpenUserLog("RegisteredMenuDump")
+
+  int i = 0
+  int ProcessedMenus = 0
+  CustomMenu CurrentMenu
+  While (i < ChunkCount * 128)
+    If (ProcessedMenus == MenuCount)
+      Return
+    EndIf
+
+    CurrentMenu = GetMenuStruct(i)
+    Debug.TraceUser("RegisteredMenuDump", CurrentMenu)
+
+    i += 1
+    ProcessedMenus += 1
+  EndWhile
+
+  Debug.CloseUserLog("RegisteredMenuDump")
 EndFunction
 
 ; Note that the recursion here will break if there are cycles in the

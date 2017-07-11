@@ -31,6 +31,7 @@ Function Fragment_Terminal_03(ObjectReference akTerminalRef)
   SettlementMenuManager:MainScript SMM = smm_MenuInstaller as \
     SettlementMenuManager:MainScript
   SMM.DumpMenu()
+  SMM.DumpRegisteredMenus()
   Debug.Notification("Menu Dump Complete")
 ;END CODE
 EndFunction
