@@ -234,10 +234,12 @@ Function DumpRegisteredMenus()
     EndIf
 
     CurrentMenu = GetMenuStruct(i)
-    Debug.TraceUser("RegisteredMenuDump", CurrentMenu)
+    If (CurrentMenu.PluginName != "")
+      Debug.TraceUser("RegisteredMenuDump", CurrentMenu)
+      ProcessedMenus += 1
+    EndIf
 
     i += 1
-    ProcessedMenus += 1
   EndWhile
 
   Debug.CloseUserLog("RegisteredMenuDump")
