@@ -334,3 +334,18 @@ EndFunction
 ;   Flatten(MainScript.WorkshopMainMenu)
 ;   Debug.Messagebox("the menu is ready to be broken")
 ; EndFunction
+
+
+; added to deal with broken/removed Creation Club main menu entries
+; (nasty hack - once removed, the CC main menu can only be added back as
+; a scripted AddForm() - and it can be wrecked/removed easily too)
+Function RepairCreationClubMainMenu()
+  ; load the formid from the Fallout4.esm
+  Form WorkshopMenu01CreationClub = Game.GetFormFromFile(0x0024a0dc, "Fallout4.esm")
+
+  ; check that it's not already in the main menu
+  If (! WorkshopMainMenu.HasForm(WorkshopMenu01CreationClub))
+    ; add it again
+    WorkshopMainMenu.AddForm(WorkshopMenu01CreationClub)
+  EndIf
+EndFunction

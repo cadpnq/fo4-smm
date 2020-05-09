@@ -37,6 +37,18 @@ Function Fragment_Terminal_03(ObjectReference akTerminalRef)
 EndFunction
 ;END FRAGMENT
 
+;BEGIN FRAGMENT Fragment_Terminal_04
+Function Fragment_Terminal_04(ObjectReference akTerminalRef)
+;BEGIN CODE
+; creation club
+  SettlementMenuManager:MainScript SMM = smm_MenuInstaller as \
+    SettlementMenuManager:MainScript
+  SMM.RepairCreationClubMainMenu()
+  SMM_RepairComplete.Show()
+;END CODE
+EndFunction
+;END FRAGMENT
+
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 
 Quest Property smm_MenuInstaller Auto Const
